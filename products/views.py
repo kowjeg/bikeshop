@@ -1,6 +1,6 @@
 from django.db.models import Avg, Q
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Product, Category
 
 
@@ -63,3 +63,26 @@ class ProductListView(ListView):
         context['querystring'] = self.request.GET.urlencode()
         return context
 
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product-detail.html'
+    context_object_name = 'product'
+
+    def get_queryset(self):
+        return (
+            Product.objects.filter(is_active=True)
+            .select_related('category')
+            .annotate(avg_rating=Avg('reviews__rating'))
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['review_form'] = None #TODO ReviewForm()
+
+        user = self.request.user
+        ctx['can_review'] = (
+            user.is_authenticated
+            #TODO логика прошлой покупки пользователем
+        )
+
+        return ctx

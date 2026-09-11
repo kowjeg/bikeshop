@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %} {{product.name}} - Bikeshop {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Product Info Section -->
+    <section class="product-details-section">
+      <div class="product-image-container">
+          {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+          {% endif %}
+      </div>
+      <div class="product-info-column">
+        <div class="product-title-price">
+          <h1 class="product-name">{{ product.name }}</h1>
+          <div class="price-section">
+            <span class="price-tag"> за шт.</span>
+            <p class="product-price">{{ product.price }}</p>
+          </div>
+        </div>
+        <div class="product-description">
+          <p>{{ product.description }}</p>
+        </div>
+          <div class="cart-controls">
+              {% if product.stock > 0 %}
+              <form method="POST" action=" url 'orders:cart_add' product.id">
+                  {% csrf_token %}
+                  <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                  <button type="submit" class="button button--primary add-to-cart-button">
+                      <i class="fa-solid fa-cart-shopping"><span>Добавить в корзину</span></i>
+                  </button>
+              </form>
+
+              {% else %}
+              <p>Нет в наличии</p>
+              {% endif %}
+          </div>
+
+
+        <!-- Container for managing the cart -->
+<!--        <div class="cart-controls">-->
+<!--          &lt;!&ndash; Add to Cart button (visible by default) &ndash;&gt;-->
+<!--          <button class="button button&#45;&#45;primary add-to-cart-button" id="add-to-cart-btn">-->
+<!--            <i class="fa-solid fa-cart-shopping"></i>-->
+<!--            <span>Add to Cart</span>-->
+<!--          </button>-->
+
+<!--          &lt;!&ndash; Quantity counter (hidden by default) &ndash;&gt;-->
+<!--          <div class="quantity-counter is-hidden" id="quantity-counter">-->
+<!--            <button class="quantity-btn" data-action="decrease" aria-label="Decrease quantity">-->
+<!--              <i class="fa-solid fa-minus"></i>-->
+<!--            </button>-->
+<!--            <span class="quantity-value">1 in cart</span>-->
+<!--            <button class="quantity-btn" data-action="increase" aria-label="Increase quantity">-->
+<!--              <i class="fa-solid fa-plus"></i>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
+      </div>
+    </section>
+
+<!--    &lt;!&ndash; Technical Specifications Accordion &ndash;&gt;-->
+<!--    <section class="accordion-section">-->
+<!--      <div class="accordion-item">-->
+<!--        <div class="accordion-title">-->
+<!--          <h3>Technical Specifications</h3>-->
+<!--          <i class="fa-solid fa-chevron-down accordion-icon"></i>-->
+<!--        </div>-->
+<!--        <div class="accordion-content">-->
+<!--          <ul>-->
+<!--            <li><strong>Origin:</strong> USA</li>-->
+<!--            <li><strong>Type:</strong> Aroma (Dual-Purpose)</li>-->
+<!--            <li><strong>Alpha Acids:</strong> 11.0% - 13.0%</li>-->
+<!--            <li><strong>Beta Acids:</strong> 3.0% - 4.5%</li>-->
+<!--            <li><strong>Aroma Profile:</strong> Grapefruit, Lime, Passion Fruit, Lychee, Melon</li>-->
+<!--            <li><strong>Usage:</strong> Late Kettle Addition, Dry Hopping</li>-->
+<!--            <li><strong>Recommended Beer Styles:</strong> IPA, Double IPA, Pale Ale, American Wheat</li>-->
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
+
+    <!-- Latest Reviews Section -->
+    <section class="reviews-section">
+      <h2 class="reviews-title">Последние отзывы</h2>
+      <div class="reviews-grid">
+          {% for review in product.reviews.all %}
+            <div class="review-card">
+              <div class="review-rating">
+                {% for star in '12345' %}
+                  <i class="fa-solid fa-star"></i>
+                  {% endfor %}
+
+              </div>
+              <div class="review-body">
+                <h4 class="review-heading">Оглавление комментария</h4>
+                <p class="review-text">{{ review.comment }}</p>
+              </div>
+              <div class="review-author">
+<!--                <img src="../static/img/avatars/avatar1.svg" alt="User avatar" class="author-avatar">-->
+                <span class="author-name">{{ review.user.username }}</span>
+              </div>
+            </div>
+          {% empty %}
+            <p>Ещё нет отзывов.</p>
+          {% endfor %}
+
+      </div>
+    </section>
+  </div>
+
+{% endblock %}

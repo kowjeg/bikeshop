@@ -17,7 +17,8 @@ import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# base.py лежит в config/settings/, поэтому до корня проекта — три уровня вверх.
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 load_dotenv(BASE_DIR / '.env')
 
@@ -28,9 +29,10 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
+# Переопределяется в development.py / prod.py.
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -62,6 +64,9 @@ INSTALLED_APPS += SECONDARY_APPS
 INSTALLED_APPS += THIRTY_APPS
 
 
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -84,6 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'orders.context_processors.cart',
             ],
         },
     },
