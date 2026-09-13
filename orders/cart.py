@@ -25,7 +25,7 @@ class Cart:
         if pid not in self.cart:
             self.cart[pid] = {'quantity': 0, 'price': str(product.price)}
         if override:
-            self.cart[pid]['quantity'] += quantity
+            self.cart[pid]['quantity'] = quantity
         else:
             self.cart[pid]['quantity'] += quantity
 
@@ -43,11 +43,11 @@ class Cart:
 
     def __iter__(self):
         products = Product.objects.filter(id__in = self.cart.keys())
-        cart = self.cart.copy()
-        for product in products:
-            cart[str(product.id)]['product'] = product
+        products_by_id = {str(product.id): product for product in products}
 
-        for item in cart.values():
+        for pid, cart_item in self.cart.items():
+            item = cart_item.copy()
+            item['product'] = products_by_id[pid]
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
             yield item
@@ -57,9 +57,9 @@ class Cart:
         return len(self.cart)
 
     def get_total_price(self):
-        total_price = 0
-        for product in self.cart.values():
-            total_price += product['price'] * product['quantity']
+        total_price = Decimal('0')
+        for item in self.cart.values():
+            total_price += Decimal(item['price']) * item['quantity']
         return total_price
 
     def clear(self):

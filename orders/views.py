@@ -14,10 +14,10 @@ def cart_detail(request):
 def cart_add(request, product_id):
     cart = Cart(request)
 
-    product = get_object_or_404(Product, pk=product_id, is_available=True)
+    product = get_object_or_404(Product, pk=product_id, is_active=True)
     quantity = int(request.POST.get('quantity',1))
 
-    already = next((item['quantity'] for item in cart if item['product_id'] == product_id), 0)
+    already = next((item['quantity'] for item in cart if item['product'].id == product_id), 0)
 
     if already + quantity > product.stock:
         messages.error(request, f'Только {product.stock} шт {product.name} в наличии.')
@@ -31,16 +31,16 @@ def cart_add(request, product_id):
 @require_POST
 def cart_update(request, product_id):
     cart = Cart(request)
-    product = get_object_or_404(Product, pk=product_id, is_available=True)
+    product = get_object_or_404(Product, pk=product_id, is_active=True)
     quantity = int(request.POST.get('quantity',1))
 
     if quantity < 1:
         cart.remove(product)
 
     elif quantity > product.stock:
-        messages.error(f'Только {product.stock} шт. в наличии')
+        messages.error(request, f'Только {product.stock} шт. в наличии')
     else:
-        cart.add(product, quantity)
+        cart.add(product, quantity, override=True)
 
     return redirect('orders:cart_detail')
 
@@ -48,7 +48,7 @@ def cart_update(request, product_id):
 @require_POST
 def cart_remove(request, product_id):
     cart = Cart(request)
-    product = get_object_or_404(Product, pk=product_id, is_available=True)
+    product = get_object_or_404(Product, pk=product_id, is_active=True)
     cart.remove(product)
-    messages.info(f'{product.name} удален из корзины')
+    messages.info(request, f'{product.name} удален из корзины')
     return redirect('orders:cart_detail')

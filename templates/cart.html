@@ -19,13 +19,14 @@
 
         <div class="cart-item">
             {% if item.product.image %}
-            <img src="{{ item.product.image.url }}" alt="{{ item.product.image.name }}" class="cart-item__image">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-item__image">
+            {% endif %}
             <div class="cart-item__body">
                 <div class="cart-item__details">
                     <h2 class="cart-item__name">{{ item.product.name }}</h2>
                     <div class="cart-item__price-info">
                         <p class="cart-item__price" data-item-total-price>
-                            {{ item.product.price }}
+                            {{ item.total_price }}
                         </p>
                         <span class="cart-item__price-tag">{{ item.price }} за шт. </span>
                     </div>
@@ -34,10 +35,9 @@
                     <form method="POST" action="{% url 'orders:cart_update' item.product.id %}"
                           class="cart-item__quantity-selector">
                         {% csrf_token %}
-                        <button class="quantity-btn-cart" data-action="decrease"><i class="fa-solid fa-minus"></i>
-                        </button>
-                        <span class="quantity-value-cart">5</span>
-                        <button class="quantity-btn-cart" data-action="increase"><i class="fa-solid fa-plus"></i>
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="quantity-value-cart">
+                        <button type="submit" class="quantity-btn-cart" aria-label="Обновить количество">
+                            <i class="fa-solid fa-rotate"></i>
                         </button>
                     </form>
 

@@ -25,7 +25,7 @@
         </div>
           <div class="cart-controls">
               {% if product.stock > 0 %}
-              <form method="POST" action=" url 'orders:cart_add' product.id">
+              <form method="POST" action="{% url 'orders:cart_add' product.id %}">
                   {% csrf_token %}
                   <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
                   <button type="submit" class="button button--primary add-to-cart-button">

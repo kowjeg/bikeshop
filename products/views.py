@@ -60,7 +60,7 @@ class ProductListView(ListView):
         params = self.request.GET.copy()
         params.pop('page', None)
 
-        context['querystring'] = self.request.GET.urlencode()
+        context['querystring'] = params.urlencode()
         return context
 
 class ProductDetailView(DetailView):
