@@ -65,7 +65,7 @@
                 <p>Всего</p>
                 <p id="cart-total-price">{{ cart.get_total_price }}</p>
             </div>
-            <a href="checkout.html" class="button button--primary button--checkout">К оформлению</a>
+            <a href="{% url 'orders:checkout' %}" class="button button--primary button--checkout">К оформлению</a>
         </div>
         {% endif %}
 

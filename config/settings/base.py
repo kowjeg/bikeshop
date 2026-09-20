@@ -159,6 +159,11 @@ MEDIA_URL = '/media/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
+
+DEFAULT_FROM_EMAIL = 'shop@bikeshop.local'
+
+LOGIN_URL = 'users:login'
+
 MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',

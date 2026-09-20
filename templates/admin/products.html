@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,14 +13,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Main CSS -->
-  <link rel="stylesheet" href="../../static/css/main.css">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
 <!-- Header -->
 <header>
   <div class="header-container">
     <a href="../home.html" class="header__logo">
-      <img src="../../static/img/logo.svg" alt="Hop & Barley Logo">
+      <img src="{% static 'img/logo.svg' %}" alt="Hop & Barley Logo">
       <p class="logo-text">Hop & Barley</p>
     </a>
     <nav class="header__nav">
@@ -33,10 +34,10 @@
     </nav>
     <div class="header__user-actions">
       <a href="../account.html" class="user-icon" aria-label="My Account">
-        <img src="../../static/img/icons/User_alt.svg" alt="User Account">
+        <img src="{% static 'img/icons/User_alt.svg' %}" alt="User Account">
       </a>
       <a href="../cart.html" class="cart-icon" aria-label="Shopping Cart">
-        <img src="../../static/img/icons/Shopping_bag.svg" alt="Shopping Cart">
+        <img src="{% static 'img/icons/Shopping_bag.svg' %}" alt="Shopping Cart">
       </a>
 
     </div>
@@ -196,6 +197,6 @@
 <!--</footer>-->
 
 <!-- JS -->
-<script src="../../static/js/main.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

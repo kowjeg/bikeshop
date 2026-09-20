@@ -783,7 +783,7 @@ footer {
 ========================================
 */
 .header__user-actions {
-    display: none;
+    display: flex;
     align-items: center;
     gap: 24px;
 }
@@ -804,26 +804,6 @@ footer {
     border: 1px solid var(--border-dark-grey);
     color: var(--black-main);
     padding: 8px 16px;
-}
-
-/*
-========================================
-    Logic for Hiding/Showing Auth Blocks
-========================================
-*/
-
-body:not(.user-logged-in) .header__user-actions {
-    display: none;
-}
-body:not(.user-logged-in) .header__auth-buttons {
-    display: flex;
-}
-
-body.user-logged-in .header__auth-buttons {
-    display: none;
-}
-body.user-logged-in .header__user-actions {
-    display: flex;
 }
 
 
