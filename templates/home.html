@@ -11,52 +11,66 @@
         <div class="hero-banner__overlay"></div>
     </section>
 
-    <div class="container main-content-grid">
+    {# Одна GET-форма на поиск и фильтры: при отправке браузер соберёт ?q=...&categories=...&min_price=... #}
+    <form method="get" class="container main-content-grid">
+        <input type="hidden" name="sort" value="{{ current_sort }}">
+
         <aside class="sidebar filter-menu">
+            {% if category_tags %}
             <div class="sidebar__section">
-                <h3 class="section-title">Keywords</h3>
+                <h3 class="section-title">Выбрано</h3>
                 <div class="keywords-list">
+                    {% for name, url in category_tags %}
+                    <a href="?{{ url }}" class="keyword-tag">{{ name }} <i class="fa-solid fa-xmark remove-keyword-icon"></i></a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="sidebar__section">
+                <h3 class="section-title">Категории</h3>
+                <div class="checkbox-group">
+                    {% for category in categories %}
+                    <label class="checkbox-container checkbox-container--parent">{{ category.name }}
+                        <input type="checkbox" name="categories" value="{{ category.slug }}"{% if category.slug in selected_categories %} checked{% endif %}>
+                        <span class="checkmark"></span>
+                    </label>
+                    {% for child in category.children.all %}
+                    <label class="checkbox-container checkbox-container--child">{{ child.name }}
+                        <input type="checkbox" name="categories" value="{{ child.slug }}"{% if child.slug in selected_categories %} checked{% endif %}>
+                        <span class="checkmark"></span>
+                    </label>
+                    {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
 
             <div class="sidebar__section">
-                <h3 class="section-title">Product Type</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-container">Hops
-                        <input type="checkbox" data-keyword="Hops">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Malts
-                        <input type="checkbox" data-keyword="Malts">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Yeast
-                        <input type="checkbox" data-keyword="Yeast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Adjuncts
-                        <input type="checkbox" data-keyword="Adjuncts">
-                        <span class="checkmark"></span>
-                    </label>
+                <h3 class="section-title">Цена, ₽</h3>
+                <div class="price-range">
+                    <input type="number" name="min_price" min="0" step="1" class="Input" placeholder="от" value="{{ min_price|default_if_none:'' }}">
+                    <input type="number" name="max_price" min="0" step="1" class="Input" placeholder="до" value="{{ max_price|default_if_none:'' }}">
                 </div>
+            </div>
+
+            <div class="sidebar__section">
+                <button type="submit" class="button button--primary">Применить</button>
+                <a href="?sort={{ current_sort }}" class="button button--secondary">Сбросить</a>
             </div>
         </aside>
 
         <section class="products-area product-grid-section">
             <div class="search-sort-bar">
                 <div class="search-input-wrapper">
-                    <input type="text" placeholder="Search" class="search-input">
-                    <button class="search-button" aria-label="Search">
+                    <input type="text" name="q" value="{{ query }}" placeholder="Search" class="search-input">
+                    <button type="submit" class="search-button" aria-label="Search">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
                 <div class="sort-options">
-                    <button class="sort-button active-sort">
-                        <span>New</span>
-                    </button>
-                    <button class="sort-button">Price ascending</button>
-                    <button class="sort-button">Price descending</button>
-                    <button class="sort-button">Rating</button>
+                    {% for key, label in sort_options %}
+                    <a href="?sort={{ key }}{% if sort_querystring %}&{{ sort_querystring }}{% endif %}" class="sort-button{% if key == current_sort %} active-sort{% endif %}">{{ label }}</a>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -101,7 +115,7 @@
             </div>
             {% endif %}
         </section>
-    </div>
+    </form>
 
 
 {% endblock %}

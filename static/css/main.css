@@ -267,6 +267,19 @@ header {
     user-select: none;
 }
 
+.checkbox-container--parent {
+    font-weight: 600;
+}
+
+.checkbox-container--child {
+    margin-left: 20px;
+}
+
+.price-range {
+    display: flex;
+    gap: 8px;
+}
+
 .checkbox-container input {
     position: absolute;
     opacity: 0;
