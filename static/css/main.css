@@ -72,13 +72,12 @@ header {
 .header__logo {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 12px;
 }
 
 .header__logo img {
-    width: 26px;
-    height: 37.52px;
-    border-radius: 8px;
+    width: 54px;
+    height: 36px;
 }
 
 .header__logo .logo-text {
