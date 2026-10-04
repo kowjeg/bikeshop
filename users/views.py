@@ -1,12 +1,15 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from users.forms import RegisterForm, ProfileForm
+from django.core.paginator import Paginator
+from django.shortcuts import redirect, render
+
+from users.forms import ProfileForm, RegisterForm
 from users.models import Profile
 
-
 # Create your views here.
+
+ORDERS_PER_PAGE = 10
 
 
 def register_view(request):
@@ -62,7 +65,10 @@ def profile(request):
     else:
         form = ProfileForm(instance=user_profile, initial={'email': request.user.email})
 
-    return render(request, 'account.html', {'form': form})
+    orders = request.user.orders.order_by('-created_at')
+    orders_page = Paginator(orders, ORDERS_PER_PAGE).get_page(request.GET.get('page'))
+
+    return render(request, 'account.html', {'form': form, 'orders_page': orders_page})
 
 
 

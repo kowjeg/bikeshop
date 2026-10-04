@@ -1,5 +1,6 @@
 from django import forms
 
+
 class CheckoutForm(forms.Form):
     PAYMENT_CHOICES = [
         ('debit', 'Debit Card'),

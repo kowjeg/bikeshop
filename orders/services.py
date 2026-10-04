@@ -3,7 +3,9 @@ from django.core.mail import send_mail
 from django.db import transaction
 
 from products.models import Product
+
 from .models import Order, OrderItem
+
 
 class OutOfStock(Exception):
     pass

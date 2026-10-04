@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
-import os
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # base.py лежит в config/settings/, поэтому до корня проекта — три уровня вверх.

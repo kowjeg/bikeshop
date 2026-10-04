@@ -7,14 +7,23 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
 
     ports:
       - "5432:5432"
 
 
   web:
-    build: .
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    build:
+      context: .
+      args:
+        DEV: "true"
+    # миграции применяются при каждом старте — на чистой копии база готова сразу
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -22,8 +31,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 
 volumes:
-  pg_data:
+  pg_data:

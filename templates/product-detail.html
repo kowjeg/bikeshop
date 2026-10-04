@@ -88,15 +88,18 @@
       <div class="reviews-grid">
           {% for review in product.reviews.all %}
             <div class="review-card">
-              <div class="review-rating">
+              <div class="review-rating" title="{{ review.rating }} из 5">
                 {% for star in '12345' %}
-                  <i class="fa-solid fa-star"></i>
-                  {% endfor %}
-
+                  {% if forloop.counter <= review.rating %}
+                    <i class="fa-solid fa-star"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star"></i>
+                  {% endif %}
+                {% endfor %}
               </div>
               <div class="review-body">
-                <h4 class="review-heading">Оглавление комментария</h4>
-                <p class="review-text">{{ review.comment }}</p>
+                <h4 class="review-heading">{{ review.created_at|date:"j E Y" }}</h4>
+                <p class="review-text">{{ review.comments }}</p>
               </div>
               <div class="review-author">
 <!--                <img src="../static/img/avatars/avatar1.svg" alt="User avatar" class="author-avatar">-->

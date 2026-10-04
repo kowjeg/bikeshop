@@ -219,3 +219,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Загруженные файлы (картинки товаров создаёт manage.py seed_demo из products/seed_data)
+/media/

@@ -1,9 +1,10 @@
+from django.db import transaction
 from rest_framework import serializers
-from .models import Order, OrderItem
-from .services import send_order_email
+
 from products.models import Product
 
-from django.db import transaction
+from .models import Order, OrderItem
+from .services import send_order_email
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

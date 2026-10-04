@@ -9,8 +9,12 @@ RUN pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 
+ARG DEV=false
+
 RUN poetry config virtualenvs.create false \
-    && poetry install --only main --no-root
+    && if [ "$DEV" = "true" ]; \
+       then poetry install --with dev --no-root; \
+       else poetry install --only main --no-root; fi
 
 COPY . .
 

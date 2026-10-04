@@ -1,9 +1,6 @@
 from decimal import Decimal
 
-from django.contrib.sites import requests
-
 from products.models import Product
-
 
 CART_SESSION_ID = 'cart'
 

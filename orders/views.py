@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from products.models import Product
+
 from .cart import Cart
 from .forms import CheckoutForm
-from .services import create_order, OutOfStock
+from .services import OutOfStock, create_order
+
 # Create your views here.
 
 def cart_detail(request):

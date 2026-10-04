@@ -4,8 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from orders.api_views import OrderViewSet
-from products.api_views import ProductViewSet, CategoryViewSet
-
+from products.api_views import CategoryViewSet, ProductViewSet
 from users.api_views import RegisterAPIView
 
 router = DefaultRouter()

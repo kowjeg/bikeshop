@@ -29,100 +29,40 @@
           </div>
           <!-- Table Body -->
           <div class="order-table-body">
-            <!-- Example Row 1 -->
+            {% for order in orders_page %}
             <div class="order-table-row">
               <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
+                <span class="order-id">#{{ order.id }}</span>
+                <span class="order-date">{{ order.created_at|date:"j E Y" }}</span>
               </div>
               <div class="order-table-cell">
-                <span class="order-status">Pending</span>
+                <span class="order-status">{{ order.get_status_display }}</span>
               </div>
               <div class="order-table-cell">
-                <span class="order-total">$100.00</span>
+                <span class="order-total">{{ order.total_price|floatformat:"2g" }} ₽</span>
               </div>
             </div>
-            <!-- Example Row 2 -->
+            {% empty %}
             <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Pending</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$90.00</span>
-              </div>
+              <div class="order-table-cell">Заказов пока нет.</div>
             </div>
-            <!-- ... add more rows as needed ... -->
-            <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Confirmed</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$140.00</span>
-              </div>
-            </div>
-            <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Delivered</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$120.00</span>
-              </div>
-            </div>
-            <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Shipped</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$120.00</span>
-              </div>
-            </div>
-            <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Shipped</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$120.00</span>
-              </div>
-            </div>
-            <div class="order-table-row">
-              <div class="order-table-cell">
-                <span class="order-id">#123232122033</span>
-                <span class="order-date">7 Mar 2025</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-status">Shipped</span>
-              </div>
-              <div class="order-table-cell">
-                <span class="order-total">$120.00</span>
-              </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
-        <!-- Pagination (simplified) -->
+        {% if orders_page.paginator.num_pages > 1 %}
         <div class="account-pagination">
-          <a href="#" class="pagination-link-account disabled">← Previous</a>
-          <a href="#" class="pagination-link-account">Next →</a>
+          {% if orders_page.has_previous %}
+          <a href="?page={{ orders_page.previous_page_number }}" class="pagination-link-account">← Previous</a>
+          {% else %}
+          <span class="pagination-link-account disabled">← Previous</span>
+          {% endif %}
+          {% if orders_page.has_next %}
+          <a href="?page={{ orders_page.next_page_number }}" class="pagination-link-account">Next →</a>
+          {% else %}
+          <span class="pagination-link-account disabled">Next →</span>
+          {% endif %}
         </div>
+        {% endif %}
       </div>
 
       <!-- Account Information Panel -->
