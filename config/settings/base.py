@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -48,7 +48,9 @@ INSTALLED_APPS = [
 
 SECONDARY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
+    'drf_spectacular',
+    'django_filters',
+
 ]
 
 THIRTY_APPS = [
@@ -64,8 +66,36 @@ INSTALLED_APPS += SECONDARY_APPS
 INSTALLED_APPS += THIRTY_APPS
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 12,
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
 
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'BikeShop API',
+    'DESCRIPTION': 'BikeShop REST API',
+    'VERSION': '0.0.1',
+
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
