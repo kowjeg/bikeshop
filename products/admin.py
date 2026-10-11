@@ -1,17 +1,18 @@
 from django.contrib import admin
 from django.db.models import Avg, Count
 
-from .models import Product
+from .models import Product, Category
+
 
 # Register your models here.
 
-# @admin.register(Category)
-# class CategoryAdmin(admin.ModelAdmin):
-#     list_display = ('name','slug', 'parent')
-#     prepopulated_fields = {'slug': ('name',)}
-#     search_fields = ['name']
-#
-#
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name','slug', 'parent')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name']
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name','price','category', 'stock', 'is_active', 'orders_count', 'avg_rating')
