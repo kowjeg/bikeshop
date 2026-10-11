@@ -3,6 +3,10 @@ from decimal import Decimal, InvalidOperation
 from django.db.models import Avg, F, Q
 from django.views.generic import DetailView, ListView
 
+from reviews.forms import ReviewForm
+from reviews.services import can_review
+
+
 from .models import Category, Product
 
 # Create your views here.
@@ -108,12 +112,9 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['review_form'] = None #TODO ReviewForm()
 
-        user = self.request.user
-        ctx['can_review'] = (
-            user.is_authenticated
-            #TODO логика прошлой покупки пользователем
-        )
+        allowed = can_review(self.request.user, self.object)
+        ctx['can_review'] = allowed
+        ctx['review_form'] = ReviewForm() if allowed else None
 
         return ctx

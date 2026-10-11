@@ -111,6 +111,20 @@
           {% endfor %}
 
       </div>
+
+      {% if can_review %}
+        <form method="post" action="{% url 'reviews:create' product.slug %}" class="review-form">
+          {% csrf_token %}
+          {{ review_form.as_p }}
+          <button type="submit" class="button button--primary">Оставить отзыв</button>
+        </form>
+      {% elif user.is_authenticated %}
+        <p class="review-hint">Оставить отзыв можно после покупки товара (один отзыв на товар).</p>
+      {% else %}
+        <p class="review-hint">
+          <a href="{% url 'users:login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить отзыв.
+        </p>
+      {% endif %}
     </section>
   </div>
 

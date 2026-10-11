@@ -1972,3 +1972,20 @@ footer {
     height: 44px;
     padding: 0 32px;
 }
+
+
+
+.review-form {
+  margin-top: 2rem;
+  max-width: 600px;
+}
+
+.review-form textarea,
+.review-form select {
+  width: 100%;
+}
+
+.review-hint {
+  margin-top: 2rem;
+  color: #666;
+}
