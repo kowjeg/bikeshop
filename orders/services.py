@@ -7,12 +7,23 @@ from products.models import Product
 from .models import Order, OrderItem
 
 
-class OutOfStock(Exception):
+class OrderError(Exception):
+    """Любая ошибка, из-за которой заказ нельзя оформить."""
+
+
+class OutOfStock(OrderError):
+    pass
+
+
+class InvalidQuantity(OrderError):
     pass
 
 
 @transaction.atomic
 def create_order(user, cart, data) -> Order:
+    for item in cart:
+        if item['quantity'] < 1:
+            raise InvalidQuantity('В корзине некорректное количество товара. Обновите корзину.')
     total = sum(item['price'] * item['quantity'] for item in cart)
 
     order = Order.objects.create(user=user,

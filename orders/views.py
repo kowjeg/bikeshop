@@ -7,9 +7,17 @@ from products.models import Product
 
 from .cart import Cart
 from .forms import CheckoutForm
-from .services import OutOfStock, create_order
+from .services import OrderError, create_order
 
 # Create your views here.
+
+def parse_quantity(request):
+    """Достаёт quantity из формы. Если там не число, возвращает None."""
+    try:
+        return int(request.POST.get('quantity', 1))
+    except (TypeError, ValueError):
+        return None
+
 
 def cart_detail(request):
     return render(request, 'cart.html', {'cart': Cart(request)})
@@ -20,7 +28,10 @@ def cart_add(request, product_id):
     cart = Cart(request)
 
     product = get_object_or_404(Product, pk=product_id, is_active=True)
-    quantity = int(request.POST.get('quantity',1))
+    quantity = parse_quantity(request)
+    if quantity is None or quantity < 1:
+        messages.error(request, 'Количество должно быть целым числом не меньше 1.')
+        return redirect('orders:cart_detail')
 
     already = next((item['quantity'] for item in cart if item['product'].id == product_id), 0)
 
@@ -37,7 +48,10 @@ def cart_add(request, product_id):
 def cart_update(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, pk=product_id, is_active=True)
-    quantity = int(request.POST.get('quantity',1))
+    quantity = parse_quantity(request)
+    if quantity is None:
+        messages.error(request, 'Количество должно быть целым числом.')
+        return redirect('orders:cart_detail')
 
     if quantity < 1:
         cart.remove(product)
@@ -79,7 +93,7 @@ def checkout(request):
             ]
             try:
                 create_order(request.user, cart_data, form.cleaned_data)
-            except OutOfStock as e:
+            except OrderError as e:
                 messages.error(request, str(e))
                 return redirect('orders:cart_detail')
 

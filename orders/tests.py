@@ -42,6 +42,13 @@ class TestCart:
         add_to_cart(client, product, product.stock + 1)
         assert str(product.id) not in client.session.get(CART_SESSION_ID, {})
 
+    @pytest.mark.parametrize('bad', [0, -3, 'abc', ''])
+    def test_add_bad_quantity(self, client, product, bad):
+        response = add_to_cart(client, product, bad)
+
+        assert response.status_code == 302
+        assert str(product.id) not in client.session.get(CART_SESSION_ID, {})
+
     def test_add_only_post(self, client, product):
         response = client.get(reverse('orders:cart_add', args=[product.id]))
         assert response.status_code == 405
@@ -55,6 +62,16 @@ class TestCart:
         add_to_cart(client, product, 1)
         client.post(reverse('orders:cart_update', args=[product.id]), {'quantity': 3})
         assert client.session[CART_SESSION_ID][str(product.id)]['quantity'] == 3
+    def test_update_not_a_number(self, client, product):
+        add_to_cart(client, product, 2)
+
+        response = client.post(
+            reverse('orders:cart_update', args=[product.id]),
+            {'quantity': 'abc'},
+        )
+
+        assert response.status_code == 302
+        assert client.session[CART_SESSION_ID][str(product.id)]['quantity'] == 2
 
 
 # ---------- оформление заказа на сайте ----------
@@ -87,7 +104,22 @@ class TestCheckout:
         assert len(mail.outbox) == 1
         assert mail.outbox[0].to == [user.email]
 
+    @pytest.mark.parametrize('bad', [0, -3])
+    def test_bad_quantity_in_session(self, logged_client, user, product, bad):
+        session = logged_client.session
+        session[CART_SESSION_ID] = {
+            str(product.id): {'quantity': bad, 'price': str(product.price)},
+        }
+        session.save()
 
+        response = logged_client.post(reverse('orders:checkout'), CHECKOUT_DATA)
+
+        assert response.status_code == 302
+        assert response.url == reverse('orders:cart_detail')
+        assert not Order.objects.filter(user=user).exists()
+
+        product.refresh_from_db()
+        assert product.stock == 10
 # ---------- API ----------
 
 class TestOrderAPI:
